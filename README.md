@@ -10,6 +10,15 @@ A free, editable **preview of a Spotify artist page**. Artists can test how a ne
 
 Everything runs in your browser. Nothing is uploaded and nothing is sent to any server.
 
+## Disclaimer
+
+**SpotiPreview is an unofficial, non-profit tool. It is not affiliated with, endorsed by or sponsored by Spotify AB.**
+
+- The page layout, design, icons and any related visual elements belong to **Spotify**. "Spotify" and its logos are trademarks of Spotify AB.
+- This project is only a preview/mock-up site. It has no commercial purpose, is free, and makes no money.
+- No real Spotify data, accounts or artist content is included. All names, titles and images are generic placeholders.
+- **If Spotify (or its representatives) requests it, this project will be removed as soon as possible.**
+
 ### Features
 
 - Edit the banner, artist name, photos, monthly listeners, followers, ranking and bio by clicking on them
@@ -23,22 +32,13 @@ Everything runs in your browser. Nothing is uploaded and nothing is sent to any 
 
 **Option 1: Online (GitHub Pages)**
 Open it directly in your browser, nothing to install:
-`https://YOUR-USERNAME.github.io/SpotiPreview/`
+`https://okevey.github.io/SpotiPreview/`
 
 **Option 2: On your computer**
 1. Click **Code → Download ZIP** and extract it.
 2. Double-click `index.html` to open it in your browser (Chrome, Edge or Firefox).
 
 Then click the green guide bubble, open the profile menu and choose **Customize page**.
-
-### Disclaimer
-
-**SpotiPreview is an unofficial, non-profit tool. It is not affiliated with, endorsed by or sponsored by Spotify AB.**
-
-- The page layout, design, icons and any related visual elements belong to **Spotify**. "Spotify" and its logos are trademarks of Spotify AB.
-- This project is only a preview/mock-up site. It has no commercial purpose, is free, and makes no money.
-- No real Spotify data, accounts or artist content is included. All names, titles and images are generic placeholders.
-- **If Spotify (or its representatives) requests it, this project will be removed as soon as possible.**
 
 ---
 
@@ -47,6 +47,15 @@ Then click the green guide bubble, open the profile menu and choose **Customize 
 Uma **prévia editável da página de artista do Spotify**, gratuita. Artistas podem testar como ficam um novo banner, fotos, nome, números e seções antes de usar no Spotify de verdade.
 
 Tudo roda no seu navegador. Nada é enviado para nenhum servidor.
+
+## Aviso
+
+**O SpotiPreview é uma ferramenta não oficial e sem fins lucrativos. Não tem qualquer vínculo, apoio ou patrocínio do Spotify AB.**
+
+- O layout, o design, os ícones e os elementos visuais pertencem ao **Spotify**. "Spotify" e seus logotipos são marcas registradas do Spotify AB.
+- Este projeto é apenas um site de prévia/simulação, gratuito, sem finalidade comercial.
+- Não há dados, contas ou conteúdo reais do Spotify. Nomes, títulos e imagens são genéricos.
+- **Se o Spotify (ou seus representantes) pedir, o projeto será removido o mais rápido possível.**
 
 ### Recursos
 
@@ -61,19 +70,10 @@ Tudo roda no seu navegador. Nada é enviado para nenhum servidor.
 
 **Opção 1: Online (GitHub Pages)**
 Abra direto no navegador, sem instalar nada:
-`https://SEU-USUARIO.github.io/SpotiPreview/`
+`https://okevey.github.io/SpotiPreview/`
 
 **Opção 2: No seu computador**
 1. Clique em **Code → Download ZIP** e extraia.
 2. Dê dois cliques em `index.html` para abrir no navegador (Chrome, Edge ou Firefox).
 
 Depois clique no balão verde, abra o menu do perfil e escolha **Customize page**.
-
-### Aviso
-
-**O SpotiPreview é uma ferramenta não oficial e sem fins lucrativos. Não tem qualquer vínculo, apoio ou patrocínio do Spotify AB.**
-
-- O layout, o design, os ícones e os elementos visuais pertencem ao **Spotify**. "Spotify" e seus logotipos são marcas registradas do Spotify AB.
-- Este projeto é apenas um site de prévia/simulação, gratuito, sem finalidade comercial.
-- Não há dados, contas ou conteúdo reais do Spotify. Nomes, títulos e imagens são genéricos.
-- **Se o Spotify (ou seus representantes) pedir, o projeto será removido o mais rápido possível.**
