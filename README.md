@@ -10,7 +10,7 @@ A free, editable **preview of a Spotify artist page**. Artists can test how a ne
 
 Everything runs in your browser. Nothing is uploaded and nothing is sent to any server.
 
-## Disclaimer
+### Disclaimer
 
 **SpotiPreview is an unofficial, non-profit tool. It is not affiliated with, endorsed by or sponsored by Spotify AB.**
 
@@ -48,7 +48,7 @@ Uma **prévia editável da página de artista do Spotify**, gratuita. Artistas p
 
 Tudo roda no seu navegador. Nada é enviado para nenhum servidor.
 
-## Aviso
+### Aviso
 
 **O SpotiPreview é uma ferramenta não oficial e sem fins lucrativos. Não tem qualquer vínculo, apoio ou patrocínio do Spotify AB.**
 
