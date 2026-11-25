@@ -1,10 +1,16 @@
 # SpotiPreview
 
-A free, local, editable **preview of a Spotify artist page**. Artists can test how a new banner, photos, name, numbers and sections look before using them on the real thing.
+[🇺🇸 English](#-english) · [🇧🇷 Português](#-português)
 
-Everything runs in your browser from a single HTML file. Nothing is uploaded and nothing is sent to any server.
+---
 
-## Features
+## 🇺🇸 English
+
+A free, editable **preview of a Spotify artist page**. Artists can test how a new banner, photos, name, numbers and sections look before using them on the real thing.
+
+Everything runs in your browser. Nothing is uploaded and nothing is sent to any server.
+
+### Features
 
 - Edit the banner, artist name, photos, monthly listeners, followers, ranking and bio by clicking on them
 - Banner color drives the page gradient
@@ -12,15 +18,20 @@ Everything runs in your browser from a single HTML file. Nothing is uploaded and
 - Resizable and collapsible sidebars, like the real app
 - Text markers such as `[artist]` that expand into the artist name
 - Interface in 5 languages: English, Spanish, French, German and Portuguese
-- Download your edited preview as a standalone HTML file
 
-## How to use
+### Two ways to use it
 
-1. Download or clone this repository.
-2. Open `SpotiPreview.html` in your browser (Chrome, Edge or Firefox).
-3. Click the green guide bubble, open the profile menu and choose **Customize page**.
+**Option 1: Online (GitHub Pages)**
+Open it directly in your browser, nothing to install:
+`https://YOUR-USERNAME.github.io/SpotiPreview/`
 
-## Disclaimer
+**Option 2: On your computer**
+1. Click **Code → Download ZIP** and extract it.
+2. Double-click `index.html` to open it in your browser (Chrome, Edge or Firefox).
+
+Then click the green guide bubble, open the profile menu and choose **Customize page**.
+
+### Disclaimer
 
 **SpotiPreview is an unofficial, non-profit tool. It is not affiliated with, endorsed by or sponsored by Spotify AB.**
 
@@ -31,19 +42,34 @@ Everything runs in your browser from a single HTML file. Nothing is uploaded and
 
 ---
 
-# SpotiPreview (Português)
+## 🇧🇷 Português
 
-Uma **prévia local e editável da página de artista do Spotify**, gratuita. Artistas podem testar como ficam um novo banner, fotos, nome, números e seções antes de usar no Spotify de verdade.
+Uma **prévia editável da página de artista do Spotify**, gratuita. Artistas podem testar como ficam um novo banner, fotos, nome, números e seções antes de usar no Spotify de verdade.
 
-Tudo roda no seu navegador, a partir de um único arquivo HTML. Nada é enviado para nenhum servidor.
+Tudo roda no seu navegador. Nada é enviado para nenhum servidor.
 
-## Como usar
+### Recursos
 
-1. Baixe ou clone este repositório.
-2. Abra o `SpotiPreview.html` no navegador.
-3. No menu do perfil, escolha **Customize page** (Personalizar página).
+- Edite banner, nome do artista, fotos, ouvintes mensais, seguidores, ranking e bio clicando neles
+- A cor do banner define o degradê da página
+- Ative ou desative seções e escolha quantos itens cada uma mostra
+- Barras laterais redimensionáveis e recolhíveis, como no app de verdade
+- Marcadores de texto como `[artist]` que viram o nome do artista
+- Interface em 5 idiomas: inglês, espanhol, francês, alemão e português
 
-## Aviso
+### Duas formas de usar
+
+**Opção 1: Online (GitHub Pages)**
+Abra direto no navegador, sem instalar nada:
+`https://SEU-USUARIO.github.io/SpotiPreview/`
+
+**Opção 2: No seu computador**
+1. Clique em **Code → Download ZIP** e extraia.
+2. Dê dois cliques em `index.html` para abrir no navegador (Chrome, Edge ou Firefox).
+
+Depois clique no balão verde, abra o menu do perfil e escolha **Customize page**.
+
+### Aviso
 
 **O SpotiPreview é uma ferramenta não oficial e sem fins lucrativos. Não tem qualquer vínculo, apoio ou patrocínio do Spotify AB.**
 
