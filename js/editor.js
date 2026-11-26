@@ -175,7 +175,8 @@
   /* ================= estado (guardado no <html> para ir junto no preview) ================= */
   const S = JSON.parse(root.dataset.sp || '{}');
   const save = () => { root.dataset.sp = JSON.stringify(S); };
-  const render = f => $$(`[data-sp-field="${f}"]`).forEach(e => { if (e !== editing) e.textContent = FMT[e.dataset.fmt || 'text'](S[f]); });
+  const render = f => { refreshTags(); renderField(f); };
+  const renderField = f => $$(`[data-sp-field="${f}"]`).forEach(e => { if (e !== editing) e.textContent = FMT[e.dataset.fmt || 'text'](S[f]); });
 
   /* ================= montagem (só na primeira vez; o preview já recebe tudo montado) ================= */
   function build() {
@@ -355,9 +356,11 @@
       else { const b = e.style.backgroundImage, i = b.lastIndexOf('url('); e.style.backgroundImage = (i >= 0 ? b.slice(0, i) : '') + `url("${url}")`; }
     });
     if (target.matches('[data-testid="background-image"]')) themeFrom(url);
+    if (all.some(e => e.matches('[data-testid="cover-art-image"]'))) avgColor(url, setLyrics); // capa da música (barra de baixo e painel)
   }
 
-  function themeFrom(url) {
+  // cor média da imagem, escurecida (a mesma conta serve para o banner e para a capa)
+  function avgColor(url, cb) {
     const img = new Image();
     img.onload = () => {
       const c = document.createElement('canvas'); c.width = c.height = 12;
@@ -365,17 +368,21 @@
       const d = x.getImageData(0, 0, 12, 12).data; let r = 0, g = 0, b = 0;
       for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; }
       const n = d.length / 4, f = .55;
-      setTheme('#' + [r, g, b].map(v => Math.round(v / n * f).toString(16).padStart(2, '0')).join(''));
+      cb('#' + [r, g, b].map(v => Math.round(v / n * f).toString(16).padStart(2, '0')).join(''));
     };
     img.src = url;
+  }
+  const themeFrom = url => avgColor(url, setTheme);
+  function setLyrics(hex) {
+    S.lyr = hex; save();
+    const lyr = '#' + [1, 3, 5].map(i => Math.min(255, Math.round(parseInt(hex.slice(i, i + 2), 16) * 1.45)).toString(16).padStart(2, '0')).join('');
+    $$('[data-testid="lyrics-npv-section"]').forEach(e => { e.style.setProperty('--lyrics-color-background', lyr); e.style.backgroundColor = lyr; });
   }
   function setTheme(hex) {
     S.theme = hex; save();
     const g = $('.rRzDzkFoPB1jsHaUjsDT');
     if (g) { g.style.setProperty('--background-base', hex); g.style.setProperty('--background-base-70', hex + 'b3'); g.style.setProperty('--background-base-20', hex + '33'); }
     const o = $('[data-testid="overscroll-background"]'); if (o) o.style.backgroundColor = hex + 'b3';
-    const lyr = '#' + [1, 3, 5].map(i => Math.min(255, Math.round(parseInt(hex.slice(i, i + 2), 16) * 1.45)).toString(16).padStart(2, '0')).join('');
-    $$('[data-testid="lyrics-npv-section"]').forEach(e => { e.style.setProperty('--lyrics-color-background', lyr); e.style.backgroundColor = lyr; });
     const lt = '#' + [1, 3, 5].map(i => Math.min(255, Math.round(parseInt(hex.slice(i, i + 2), 16) * 1.7)).toString(16).padStart(2, '0')).join('');
     root.style.setProperty('--sp-ring-a', lt); root.style.setProperty('--sp-ring-b', hex); // contorno da foto de perfil
     const inp = $('#sp-theme'); if (inp) inp.value = hex;
@@ -620,12 +627,24 @@
     optimize(f, target?.matches('[data-testid="background-image"]') ? 2660 : 1600).then(r => cb(r.url));
   }
 
+  // 400K -> 400.000 (aceita espaço, maiúscula ou minúscula; K mil, M milhão, B bilhão, T trilhão)
+  const SUF = { k: 1e3, m: 1e6, b: 1e9, t: 1e12 };
+  const sufNum = v => { const m = /^\s*(\d+(?:[.,]\d+)?)\s*([kmbt])\s*$/i.exec(v); return m ? Math.round(parseFloat(m[1].replace(',', '.')) * SUF[m[2].toLowerCase()]) : NaN; };
+
+  // textos com marcadores ([artist]...) guardam o que foi digitado: mostram o valor, mas ao editar de novo voltam a mostrar o marcador
+  function refreshTags() {
+    ['bio', 'song'].forEach(f => { if (S[f + 'Raw']) S[f] = expand(S[f + 'Raw']); });
+    $$('[data-sp-raw]').forEach(e => { if (e !== editing) e.textContent = expand(e.dataset.spRaw); });
+  }
+
   function startEdit(e) {
     hideHover();
     const b = e.closest('button'); if (b) unbutton(b);
     editing = e; before = e.textContent;
     const f = e.dataset.spField;
     if (NUM[f]) e.textContent = full(S[f]);
+    else if (f === 'bio' || f === 'song') { if (S[f + 'Raw']) e.textContent = S[f + 'Raw']; }
+    else if (e.dataset.spRaw) e.textContent = e.dataset.spRaw;
     e.contentEditable = 'plaintext-only';
     e.classList.add('sp-editing');
     e.focus();
@@ -638,10 +657,18 @@
     const f = e.dataset.spField, v = e.textContent.trim();
     if (cancel || (!v && f !== 'bio')) { e.textContent = before; if (f) render(f); return; }
     if (f === 'name') { if (before.trim() && before.trim() !== v) replaceText(before.trim(), v); S.name = v; fitTitle(); }
-    else if (NUM[f]) { const n = digits(v); if (!isNaN(n)) S[f] = f === 'rank' ? Math.max(1, n) : n; render(f); syncDrawer(); }
-    else if (f === 'bio') { S.bio = expand(e.innerText.trim()); render('bio'); }
-    else if (f === 'song') { S.song = expand(v); render('song'); }
-    else if (!f && expand(v) !== v) e.textContent = expand(v);
+    else if (NUM[f]) { let n = sufNum(v); if (isNaN(n)) n = digits(v); if (!isNaN(n)) S[f] = f === 'rank' ? Math.max(1, n) : n; render(f); syncDrawer(); }
+    else if (f === 'bio' || f === 'song') {
+      const raw = f === 'bio' ? e.innerText.trim() : v;
+      if (expand(raw) !== raw) S[f + 'Raw'] = raw; else delete S[f + 'Raw'];
+      S[f] = expand(raw); render(f);
+    }
+    else if (!f) {
+      const n = sufNum(v);
+      if (expand(v) !== v) { e.dataset.spRaw = v; e.textContent = expand(v); }
+      else { delete e.dataset.spRaw; if (!isNaN(n)) e.textContent = full(n); }
+    }
+    if (f === 'name') refreshTags();
     save();
   }
   function bindEdit() {
@@ -650,7 +677,7 @@
       if (!editing) return;
       if (e.key === 'Escape') { e.preventDefault(); endEdit(true); }
       else if (e.key === 'Enter' && !(editing.dataset.spField === 'bio' && e.shiftKey)) { e.preventDefault(); editing.blur(); }
-      else if (NUM[editing.dataset.spField] && e.key.length === 1 && !/[\d.]/.test(e.key) && !e.ctrlKey) e.preventDefault();
+      else if (NUM[editing.dataset.spField] && e.key.length === 1 && !/[\d.,\skmbtKMBT]/.test(e.key) && !e.ctrlKey) e.preventDefault();
     }, true);
 
     // realce ao passar o mouse
@@ -855,6 +882,7 @@
     refreshUI();
     ['name', 'listeners', 'followers', 'rank', 'bio', 'song'].forEach(render);
     if (S.theme) setTheme(S.theme);
+    if (S.lyr) setLyrics(S.lyr);
     fitTitle(); addEventListener('resize', fitTitle);
     if (EDIT) { root.classList.add('sp-edit'); bindEdit(); }
     $('#sp-menu').addEventListener('click', e => {
