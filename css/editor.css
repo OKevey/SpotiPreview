@@ -286,3 +286,14 @@
 html.sp-blocked body > *:not(#sp-mobile) { display: none !important; }
 html.sp-blocked, html.sp-blocked body { overflow: hidden; }
 html.sp-blocked body { min-width: 0 !important; min-height: 0 !important; }
+
+/* ---------- logo do SpotiPreview no lugar da do Spotify (canto superior esquerdo) ---------- */
+.sp-logo { display: block; height: 32px; width: auto; }
+html:not(.sp-logo-spotify) [data-testid="global-nav-bar"] a:has(.sp-logo) > svg { display: none; }
+html.sp-logo-spotify .sp-logo { display: none; }
+.sp-faint { display: flex; align-items: center; gap: 6px; margin: 18px 2px 2px; font-size: 11px; color: #fff; opacity: .35; cursor: pointer; }
+.sp-faint:hover { opacity: .7; }
+.sp-faint input { margin: 0; width: 12px; height: 12px; accent-color: #1ed760; }
+.sp-info-box { position: relative; }
+.sp-info-logo { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; }
+.sp-info-box h2 { padding-right: 56px; }
