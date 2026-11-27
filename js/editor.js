@@ -154,6 +154,12 @@
     const K = k.toLowerCase();
     return K === 'artist' ? (k === 'ARTIST' ? S.name.toUpperCase() : S.name) : K === 'year' ? new Date().getFullYear() : full(S[K]);
   });
+  // shows: todos na mesma data e horário (3 dez 2026, 21:00), escritos no formato do idioma escolhido
+  function tourDates() {
+    const d = new Date(2026, 11, 3, 21, 0), l = loc();
+    const txt = { m: d.toLocaleDateString(l, { month: 'short' }), d: String(d.getDate()), w: d.toLocaleString(l, { weekday: 'short', hour: 'numeric', minute: '2-digit' }) };
+    $$('[data-sp-date]').forEach(e => { if (e !== editing) e.textContent = txt[e.dataset.spDate]; });
+  }
   // sem guardar originais: qualquer idioma -> linha da tabela, então pt→en→es→pt funciona, inclusive no preview
   function applyLang(lang) {
     const fill = v => v.split('{n}').join(S.name || '');
@@ -168,7 +174,7 @@
     }
     $$('input[placeholder]').forEach(i => { const r = from.get(i.placeholder.trim()); if (r) i.placeholder = fill(r[li]); });
     if (U.bio.includes(S.bio)) S.bio = U.bio[li]; // biografia ainda é o texto de exemplo: acompanha o idioma
-    S.lang = lang; root.lang = LOCALE[lang]; save(); refreshUI(); render('bio');
+    S.lang = lang; root.lang = LOCALE[lang]; tourDates(); save(); refreshUI(); render('bio');
     ['listeners', 'followers', 'rank'].forEach(render);
   }
 
@@ -217,6 +223,19 @@
 
     // nomes reais escondidos em dicas (title), textos alternativos e rótulos de botões
     $$('#main [title], .zWzxvh50CPFKsFBEe6uX [title], [data-testid="now-playing-bar"] [title]').forEach(e => { const v = e.textContent.trim(); if (v) e.title = v; else e.removeAttribute('title'); });
+    $$('ul.x_Bd_BQvhfs9nMgQpttN li').forEach(li => {
+      const ps = $$('time.DgXq9u_UeQGVJSUpd_SZ p', li); if (ps[0]) ps[0].dataset.spDate = 'm'; if (ps[1]) ps[1].dataset.spDate = 'd';
+      const w = $('time.f896WdT9Dd6WaPO6bbEN', li); if (w) w.dataset.spDate = 'w';
+      const t = $('h3', li); if (t) t.textContent = 'Venue Name'; // título = local, última linha = cidade
+      const c = w?.nextElementSibling; if (c) c.textContent = 'City';
+    });
+    // "2016 • Album": todos os anos viram 2026 e o tipo (Album/Single) vira um texto próprio, para poder ser editado
+    $$('#main time').forEach(t => {
+      if (t.children.length) return;
+      t.setAttribute('datetime', '2026'); t.textContent = t.textContent.replace(/^\d{4}/, '2026');
+      const n = t.nextSibling;
+      if (n && n.nodeType === 3 && n.nodeValue.trim()) { const sp = document.createElement('span'); sp.textContent = n.nodeValue; n.replaceWith(sp); }
+    });
     $$('a[href]').forEach(x => x.setAttribute('href', '#')); // links do Spotify real apareciam na barra de status; sem href o estilo muda
     $$('#main img[alt], .zWzxvh50CPFKsFBEe6uX img[alt]').forEach(i => { i.alt = ''; });
     $$('[aria-label^="Tocar "], [aria-label^="Pausar "], [aria-label^="Mais opções para "]').forEach(e => e.setAttribute('aria-label', e.getAttribute('aria-label').replace(/^(Tocar|Pausar|Mais opções para) .*/, '$1')));
@@ -645,6 +664,7 @@
     if (NUM[f]) e.textContent = full(S[f]);
     else if (f === 'bio' || f === 'song') { if (S[f + 'Raw']) e.textContent = S[f + 'Raw']; }
     else if (e.dataset.spRaw) e.textContent = e.dataset.spRaw;
+    if (!f) { const m = /\s*[•·]\s*$/.exec(e.textContent); if (m) { e.dataset.spSep = m[0]; e.textContent = e.textContent.slice(0, m.index); } }
     e.contentEditable = 'plaintext-only';
     e.classList.add('sp-editing');
     e.focus();
@@ -654,7 +674,8 @@
     const e = editing; if (!e) return;
     editing = null;
     e.removeAttribute('contenteditable'); e.classList.remove('sp-editing');
-    const f = e.dataset.spField, v = e.textContent.trim();
+    const f = e.dataset.spField, v = e.textContent.trim(), sep = e.dataset.spSep || '';
+    delete e.dataset.spSep;
     if (cancel || (!v && f !== 'bio')) { e.textContent = before; if (f) render(f); return; }
     if (f === 'name') { if (before.trim() && before.trim() !== v) replaceText(before.trim(), v); S.name = v; fitTitle(); }
     else if (NUM[f]) { let n = sufNum(v); if (isNaN(n)) n = digits(v); if (!isNaN(n)) S[f] = f === 'rank' ? Math.max(1, n) : n; render(f); syncDrawer(); }
@@ -664,9 +685,11 @@
       S[f] = expand(raw); render(f);
     }
     else if (!f) {
-      const n = sufNum(v);
-      if (expand(v) !== v) { e.dataset.spRaw = v; e.textContent = expand(v); }
-      else { delete e.dataset.spRaw; if (!isNaN(n)) e.textContent = full(n); }
+      delete e.dataset.spDate;
+      const w = sep ? v.replace(/\s*[•·]\s*$/, '') : v; // se a pessoa digitou o separador, não duplica
+      const n = sufNum(w);
+      if (expand(w) !== w) { e.dataset.spRaw = w + sep; e.textContent = expand(w) + sep; }
+      else { delete e.dataset.spRaw; e.textContent = (isNaN(n) ? w : full(n)) + sep; }
     }
     if (f === 'name') refreshTags();
     save();
